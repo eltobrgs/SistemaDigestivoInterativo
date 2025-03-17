@@ -3,8 +3,8 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Swal from 'sweetalert2';
 import { organs } from '@/data/organs';
+import OrganQuiz from './OrganQuiz';
 
 interface OrganCardProps {
   id: string;
@@ -15,7 +15,6 @@ interface OrganCardProps {
 
 export default function OrganCard({ id, name, description, imageSrc }: OrganCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isQuizOpen, setIsQuizOpen] = useState(false);
   
   const organ = organs.find(o => o.id === id);
   
@@ -25,83 +24,6 @@ export default function OrganCard({ id, name, description, imageSrc }: OrganCard
   
   const closeModal = () => {
     setIsModalOpen(false);
-    setIsQuizOpen(false);
-  };
-  
-  const openQuiz = () => {
-    setIsQuizOpen(true);
-  };
-  
-  const handleQuizAnswer = (isCorrect: boolean) => {
-    if (isCorrect) {
-      Swal.fire({
-        title: 'Correto!',
-        text: 'Muito bem! Você acertou!',
-        icon: 'success',
-        confirmButtonText: 'Continuar'
-      });
-    } else {
-      Swal.fire({
-        title: 'Incorreto!',
-        text: 'Tente novamente!',
-        icon: 'error',
-        confirmButtonText: 'Tentar novamente'
-      });
-    }
-  };
-  
-  // Perguntas de exemplo para cada órgão
-  const quizQuestions = {
-    'boca': {
-      question: 'Qual enzima presente na saliva inicia a digestão dos carboidratos?',
-      options: ['Pepsina', 'Amilase salivar', 'Lipase', 'Tripsina'],
-      correctAnswer: 'Amilase salivar'
-    },
-    'faringe': {
-      question: 'Qual estrutura impede que o alimento entre no sistema respiratório durante a deglutição?',
-      options: ['Laringe', 'Epiglote', 'Esôfago', 'Traqueia'],
-      correctAnswer: 'Epiglote'
-    },
-    'esofago': {
-      question: 'Como se chama o movimento que transporta o alimento pelo esôfago?',
-      options: ['Digestão', 'Absorção', 'Peristaltismo', 'Secreção'],
-      correctAnswer: 'Peristaltismo'
-    },
-    'estomago': {
-      question: 'Qual substância é produzida pelo estômago para criar um ambiente ácido?',
-      options: ['Bile', 'Ácido clorídrico', 'Insulina', 'Bicarbonato de sódio'],
-      correctAnswer: 'Ácido clorídrico'
-    },
-    'intestino-delgado': {
-      question: 'Qual parte do intestino delgado recebe as secreções do pâncreas e do fígado?',
-      options: ['Jejuno', 'Íleo', 'Duodeno', 'Cólon'],
-      correctAnswer: 'Duodeno'
-    },
-    'figado': {
-      question: 'Qual a principal função da bile produzida pelo fígado?',
-      options: ['Digerir proteínas', 'Emulsificar gorduras', 'Quebrar carboidratos', 'Absorver vitaminas'],
-      correctAnswer: 'Emulsificar gorduras'
-    },
-    'vesicula-biliar': {
-      question: 'Onde a bile é armazenada antes de ser liberada no intestino?',
-      options: ['Fígado', 'Pâncreas', 'Vesícula biliar', 'Estômago'],
-      correctAnswer: 'Vesícula biliar'
-    },
-    'pancreas': {
-      question: 'Qual enzima pancreática é responsável pela digestão das gorduras?',
-      options: ['Amilase', 'Lipase', 'Pepsina', 'Tripsina'],
-      correctAnswer: 'Lipase'
-    },
-    'intestino-grosso': {
-      question: 'Qual a principal função do intestino grosso?',
-      options: ['Digestão de proteínas', 'Absorção de água', 'Produção de bile', 'Digestão de carboidratos'],
-      correctAnswer: 'Absorção de água'
-    },
-    'anus': {
-      question: 'Quantos esfíncteres o ânus possui?',
-      options: ['Um', 'Dois', 'Três', 'Quatro'],
-      correctAnswer: 'Dois'
-    }
   };
   
   return (
@@ -158,68 +80,45 @@ export default function OrganCard({ id, name, description, imageSrc }: OrganCard
             >
               <button className="modal-close" onClick={closeModal} aria-label="Fechar">×</button>
               
-              {!isQuizOpen ? (
-                <div className="modal-body">
-                  <h2 className="modal-title">{name}</h2>
-                  <div className="modal-image-container">
-                    <Image
-                      src={imageSrc}
-                      alt={name}
-                      width={500}
-                      height={300}
-                      className="modal-image"
-                      priority
-                      sizes="(max-width: 768px) 95vw, 600px"
-                    />
-                  </div>
-                  <div className="modal-description">
-                    <p>{organ?.fullDescription}</p>
-                  </div>
-                  
-                  <div className="modal-section">
-                    <h3>Funções</h3>
-                    <ul>
-                      {organ?.functions.map((func, index) => (
-                        <li key={index}>{func}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <div className="modal-section">
-                    <h3>Curiosidades</h3>
-                    <ul>
-                      {organ?.facts.map((fact, index) => (
-                        <li key={index}>{fact}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  
-                  <button className="quiz-button" onClick={openQuiz}>
-                    Testar Conhecimento
-                  </button>
+              <div className="modal-body">
+                <h2 className="modal-title">{name}</h2>
+                <div className="modal-image-container">
+                  <Image
+                    src={imageSrc}
+                    alt={name}
+                    width={500}
+                    height={300}
+                    className="modal-image"
+                    priority
+                    sizes="(max-width: 768px) 95vw, 600px"
+                  />
                 </div>
-              ) : (
-                <div className="quiz-container">
-                  <h2>Quiz: {name}</h2>
-                  <p className="quiz-question">{quizQuestions[id as keyof typeof quizQuestions].question}</p>
-                  
-                  <div className="quiz-options">
-                    {quizQuestions[id as keyof typeof quizQuestions].options.map((option, index) => (
-                      <button 
-                        key={index} 
-                        className="quiz-option"
-                        onClick={() => handleQuizAnswer(option === quizQuestions[id as keyof typeof quizQuestions].correctAnswer)}
-                      >
-                        {option}
-                      </button>
+                <div className="modal-description">
+                  <p>{organ?.fullDescription}</p>
+                </div>
+                
+                <div className="modal-section">
+                  <h3>Funções</h3>
+                  <ul>
+                    {organ?.functions.map((func, index) => (
+                      <li key={index}>{func}</li>
                     ))}
-                  </div>
-                  
-                  <button className="back-button" onClick={() => setIsQuizOpen(false)}>
-                    Voltar
-                  </button>
+                  </ul>
                 </div>
-              )}
+                
+                <div className="modal-section">
+                  <h3>Curiosidades</h3>
+                  <ul>
+                    {organ?.facts.map((fact, index) => (
+                      <li key={index}>{fact}</li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div className="modal-quiz-section">
+                  <OrganQuiz organId={id} />
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         )}

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { diseases } from '@/data/diseases';
+import DiseaseQuiz from './DiseaseQuiz';
 
 interface DiseaseCardProps {
   id: string;
@@ -121,6 +122,10 @@ export default function DiseaseCard({ id, name, description, imageSrc }: Disease
                       <li key={index}>{treatment}</li>
                     ))}
                   </ul>
+                </div>
+                
+                <div className="modal-quiz-section">
+                  <DiseaseQuiz diseaseId={id} />
                 </div>
               </div>
             </motion.div>

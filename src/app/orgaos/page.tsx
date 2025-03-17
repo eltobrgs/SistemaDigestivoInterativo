@@ -26,8 +26,9 @@ export default function OrgansPage() {
             >
               <h1 className="page-title">Órgãos do Sistema Digestório</h1>
               <p className="page-description">
-                O sistema digestório é composto por vários órgãos que trabalham em conjunto para processar 
-                os alimentos, absorver nutrientes e eliminar resíduos. Conheça cada um deles em detalhes.
+                O sistema digestório é composto por diversos órgãos que trabalham em conjunto para 
+                processar os alimentos, extrair nutrientes e eliminar resíduos do corpo.
+                Conheça os principais órgãos do sistema digestório, suas funções e curiosidades.
               </p>
             </motion.div>
             
