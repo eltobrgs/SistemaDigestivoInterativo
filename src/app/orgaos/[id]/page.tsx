@@ -1,25 +1,17 @@
+'use client';
+
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { organs } from "@/data/organs";
 import { FaArrowLeft, FaListUl, FaInfoCircle } from "react-icons/fa";
 
-interface OrganPageProps {
-  params: {
-    id: string;
-  };
-}
-
-export function generateStaticParams() {
-  return organs.map((organ) => ({
-    id: organ.id,
-  }));
-}
-
-export default function OrganPage({ params }: OrganPageProps) {
-  const organ = organs.find((o) => o.id === params.id);
+export default function OrganPage() {
+  const params = useParams();
+  const id = typeof params.id === 'string' ? params.id : Array.isArray(params.id) ? params.id[0] : '';
+  const organ = organs.find((o) => o.id === id);
 
   if (!organ) {
     notFound();
@@ -88,7 +80,7 @@ export default function OrganPage({ params }: OrganPageProps) {
               <h2 className="related-title">Outros Órgãos do Sistema Digestório</h2>
               <div className="related-grid">
                 {organs
-                  .filter((o) => o.id !== organ.id)
+                  .filter((o) => o.id !== id)
                   .slice(0, 4)
                   .map((o) => (
                     <Link 

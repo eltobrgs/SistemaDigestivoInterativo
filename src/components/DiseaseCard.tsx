@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Swal from 'sweetalert2';
 import { diseases } from '@/data/diseases';
 
 interface DiseaseCardProps {
@@ -15,7 +14,6 @@ interface DiseaseCardProps {
 
 export default function DiseaseCard({ id, name, description, imageSrc }: DiseaseCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isQuizOpen, setIsQuizOpen] = useState(false);
   
   const disease = diseases.find(d => d.id === id);
   
@@ -25,48 +23,6 @@ export default function DiseaseCard({ id, name, description, imageSrc }: Disease
   
   const closeModal = () => {
     setIsModalOpen(false);
-    setIsQuizOpen(false);
-  };
-  
-  const openQuiz = () => {
-    setIsQuizOpen(true);
-  };
-  
-  const handleQuizAnswer = (isCorrect: boolean) => {
-    if (isCorrect) {
-      Swal.fire({
-        title: 'Correto!',
-        text: 'Muito bem! Você acertou!',
-        icon: 'success',
-        confirmButtonText: 'Continuar'
-      });
-    } else {
-      Swal.fire({
-        title: 'Incorreto!',
-        text: 'Tente novamente!',
-        icon: 'error',
-        confirmButtonText: 'Tentar novamente'
-      });
-    }
-  };
-  
-  // Perguntas de exemplo para cada doença
-  const quizQuestions = {
-    'apendicite': {
-      question: 'Qual é o tratamento principal para a apendicite?',
-      options: ['Antibióticos apenas', 'Cirurgia para remover o apêndice', 'Repouso e dieta líquida', 'Medicamentos anti-inflamatórios'],
-      correctAnswer: 'Cirurgia para remover o apêndice'
-    },
-    'ulceras-pepticas': {
-      question: 'Qual bactéria está frequentemente associada às úlceras pépticas?',
-      options: ['Escherichia coli', 'Helicobacter pylori', 'Streptococcus pneumoniae', 'Clostridium difficile'],
-      correctAnswer: 'Helicobacter pylori'
-    },
-    'calculos-biliares': {
-      question: 'Do que são compostos a maioria dos cálculos biliares?',
-      options: ['Cálcio', 'Colesterol cristalizado', 'Ferro', 'Proteínas'],
-      correctAnswer: 'Colesterol cristalizado'
-    }
   };
   
   return (
