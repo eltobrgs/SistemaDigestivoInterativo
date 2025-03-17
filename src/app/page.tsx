@@ -1,103 +1,252 @@
+'use client';
+
 import Image from "next/image";
+import Link from "next/link";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import Hero from "@/components/Hero";
+import OrganCard from "@/components/OrganCard";
+import DiseaseCard from "@/components/DiseaseCard";
+import { organs } from "@/data/organs";
+import { diseases } from "@/data/diseases";
+import { motion } from "framer-motion";
+import { useEffect } from 'react';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const fadeIn = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
+  // Animação suave para scroll quando clicar nos links de navegação
+  useEffect(() => {
+    const handleSmoothScroll = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const anchor = target.closest('a[href^="#"]');
+      if (anchor) {
+        e.preventDefault();
+        const targetId = anchor.getAttribute('href')?.substring(1);
+        const targetElement = document.getElementById(targetId || '');
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 100,
+            behavior: 'smooth'
+          });
+        }
+      }
+    };
+
+    document.addEventListener('click', handleSmoothScroll);
+    return () => document.removeEventListener('click', handleSmoothScroll);
+  }, []);
+
+  return (
+    <div className="page-container">
+      <Navbar />
+      <main className="main-content">
+        <Hero />
+        
+        <section className="section bg-white">
+          <div className="container">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6 }}
+              variants={fadeIn}
+            >
+              <h2 className="section-title text-center">O Sistema Digestório</h2>
+              <p className="section-description">
+                O sistema digestório é composto por vários órgãos que trabalham em conjunto para 
+                processar os alimentos, absorver nutrientes e eliminar resíduos. Conheça os principais 
+                componentes deste sistema fascinante.
+              </p>
+            </motion.div>
+            
+            <div className="organ-grid">
+              {organs.slice(0, 6).map((organ, index) => (
+                <motion.div
+                  key={organ.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <OrganCard 
+                    id={organ.id}
+                    name={organ.name}
+                    description={organ.shortDescription}
+                    imageSrc={organ.imageSrc}
+                  />
+                </motion.div>
+              ))}
+            </div>
+            
+            <motion.div
+              className="text-center mt-12"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
+              <Link href="/orgaos" className="btn-primary">
+                Ver Todos os Órgãos
+              </Link>
+            </motion.div>
+          </div>
+        </section>
+        
+        <section className="section bg-gray-100">
+          <div className="container">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6 }}
+              variants={fadeIn}
+            >
+              <h2 className="section-title text-center">Doenças do Sistema Digestório</h2>
+              <p className="section-description">
+                O sistema digestório pode ser afetado por diversas doenças que comprometem seu funcionamento.
+                Conheça as principais doenças que afetam o sistema digestório, seus sintomas, causas e tratamentos.
+              </p>
+            </motion.div>
+            
+            <div className="disease-grid">
+              {diseases.slice(0, 3).map((disease, index) => (
+                <motion.div
+                  key={disease.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <DiseaseCard 
+                    id={disease.id}
+                    name={disease.name}
+                    description={disease.shortDescription}
+                    imageSrc={disease.imageSrc}
+                  />
+                </motion.div>
+              ))}
+            </div>
+            
+            <motion.div
+              className="text-center mt-12"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <Link href="/doencas" className="btn-primary">
+                Ver Todas as Doenças
+              </Link>
+            </motion.div>
+          </div>
+        </section>
+        
+        <section className="section bg-white">
+          <div className="container">
+            <div className="model-grid">
+              <motion.div
+                className="model-info"
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6 }}
+              >
+                <h2 className="section-title">Explore o Sistema Digestório em 3D</h2>
+                <p className="model-description">
+                  Visualize o sistema digestório humano em um modelo 3D interativo. 
+                  Explore cada órgão, sua localização e função no corpo humano.
+                </p>
+                <p className="model-description mb-8">
+                  Nosso modelo 3D permite que você gire, amplie e explore cada componente 
+                  do sistema digestório em detalhes, proporcionando uma experiência educativa 
+                  única e imersiva.
+                </p>
+                <Link href="/modelo-3d" className="btn-primary">
+                  Explorar Modelo 3D
+                </Link>
+              </motion.div>
+              
+              <motion.div
+                className="model-preview"
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <Image 
+                  src="/images/3d-model-preview.png" 
+                  alt="Modelo 3D do Sistema Digestório" 
+                  width={600}
+                  height={400}
+                  className="rounded-image"
+                  priority
+                />
+              </motion.div>
+            </div>
+          </div>
+        </section>
+        
+        <section className="section bg-white">
+          <div className="container">
+            <h2 className="section-title text-center">Curiosidades Sobre o Sistema Digestório</h2>
+            
+            <div className="facts-grid">
+              <div className="fact-card">
+                <h3 className="fact-title">Comprimento Total</h3>
+                <p className="fact-description">
+                  O sistema digestório humano adulto tem aproximadamente 9 metros de comprimento, 
+                  do início da boca até o ânus.
+                </p>
+              </div>
+              
+              <div className="fact-card">
+                <h3 className="fact-title">Bactérias Intestinais</h3>
+                <p className="fact-description">
+                  O intestino humano abriga cerca de 100 trilhões de bactérias, mais de 10 vezes 
+                  o número de células do corpo humano.
+                </p>
+              </div>
+              
+              <div className="fact-card">
+                <h3 className="fact-title">Ácido Estomacal</h3>
+                <p className="fact-description">
+                  O ácido no estômago é forte o suficiente para dissolver metais, mas é protegido 
+                  por uma camada de muco que é renovada a cada duas semanas.
+                </p>
+              </div>
+              
+              <div className="fact-card">
+                <h3 className="fact-title">Enzimas Digestivas</h3>
+                <p className="fact-description">
+                  O corpo humano produz cerca de 22 tipos diferentes de enzimas digestivas para 
+                  quebrar os alimentos em componentes utilizáveis.
+                </p>
+              </div>
+              
+              <div className="fact-card">
+                <h3 className="fact-title">Tempo de Digestão</h3>
+                <p className="fact-description">
+                  Um alimento típico leva de 24 a 72 horas para percorrer todo o sistema digestório, 
+                  dependendo do tipo de alimento e metabolismo individual.
+                </p>
+              </div>
+              
+              <div className="fact-card">
+                <h3 className="fact-title">Segundo Cérebro</h3>
+                <p className="fact-description">
+                  O sistema digestório contém mais de 100 milhões de neurônios, por isso é 
+                  considerado um &quot;segundo cérebro&quot; e pode funcionar independentemente.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      <Footer />
     </div>
   );
 }
