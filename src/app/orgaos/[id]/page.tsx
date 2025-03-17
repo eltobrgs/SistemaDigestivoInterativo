@@ -1,11 +1,11 @@
 'use client';
 
-import Image from "next/image";
-import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { organs } from "@/data/organs";
+import Image from "next/image";
+import Link from "next/link";
 import { FaArrowLeft, FaListUl, FaInfoCircle } from "react-icons/fa";
 
 export default function OrganPage() {
